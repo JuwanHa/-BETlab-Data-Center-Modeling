@@ -72,6 +72,10 @@ At Data Hall level, each system is designed with N+1 redundancy to ensure stable
 
 <p align="center"><em>Figure 4. System Overview of the Liquid Cooling Data Center</em></p>
 
+#### Reference
+
+Performance Analysis of Liquid-Cooled Data Centers Under Diverse Outdoor Conditions and High-Density Rack Configurations, *Energy and Buildings* (In-preparation)
+
 #### Baseline Weather
 
 | Role | Climate Zone / Representative City | Weather Data |
