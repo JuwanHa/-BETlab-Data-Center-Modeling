@@ -1,0 +1,995 @@
+﻿! LiquidCooling_9_6MW_1Cluster_CaseB2_ChillerEIR_IntegratedWSE.idf
+! Case B-2: Integrated WSE partial-cooling model using Chiller:Electric:EIR.
+! WSE pre-cools chilled water upstream of the EIR chiller.
+! Single chiller-level ratings are applied.
+
+Version,
+    25.1;
+
+Timestep,
+    6;
+
+Building,
+    LC9_6MW_SupplyClass_W40_S45_B2_PartialCooling,
+    0.0,
+    Suburbs,
+    0.04,
+    0.004,
+    MinimalShadowing,
+    30,
+    6;
+
+GlobalGeometryRules,
+    UpperLeftCorner,
+    CounterClockWise,
+    Relative,
+    Relative;
+
+SimulationControl,
+    No,
+    No,
+    No,
+    No,
+    Yes,
+    No,
+    1;
+
+RunPeriod,
+    Annual,
+    1,
+    1,
+    ,
+    12,
+    31,
+    ,
+    Sunday,
+    Yes,
+    Yes,
+    No,
+    Yes,
+    Yes;
+
+FluidProperties:Name,
+    LC_PG30,
+    Glycol;
+
+FluidProperties:GlycolConcentration,
+    LC_PG30,
+    PropyleneGlycol,
+    ,
+    0.30;
+
+ScheduleTypeLimits,
+    Any Number;
+
+ScheduleTypeLimits,
+    Fraction;
+
+ScheduleTypeLimits,
+    Temperature,
+    -100,
+    200,
+    CONTINUOUS;
+
+Schedule:Compact,
+    Always_On,
+    Fraction,
+    Through: 12/31,
+    For: AllDays,
+    Until: 24:00,1.0;
+
+Schedule:Compact,
+    LC_IT_Load_Cluster_Schedule,
+    Any Number,
+    Through: 12/31,
+    For: AllDays,
+    Until: 24:00,-9600000;
+
+Schedule:Compact,
+    LC_Flow_Fraction_Schedule,
+    Fraction,
+    Through: 12/31,
+    For: AllDays,
+    Until: 24:00,1.0;
+
+Schedule:Compact,
+    LC_Coolant_Supply_T_Schedule,
+    Temperature,
+    Through: 12/31,
+    For: AllDays,
+    Until: 24:00,45.0;
+
+Schedule:Compact,
+    LC_Facility_Supply_T_Schedule,
+    Temperature,
+    Through: 12/31,
+    For: AllDays,
+    Until: 24:00,40.0;
+Schedule:Compact,
+    LC_Condenser_Supply_T_Schedule,
+    Temperature,
+    Through: 12/31,
+    For: AllDays,
+    Until: 24:00,30.0;
+
+LoadProfile:Plant,
+    LC_C01_IT_Load,
+    LC C01 IT Load Inlet Node,
+    LC C01 IT Load Outlet Node,
+    LC_IT_Load_Cluster_Schedule,
+    0.160,
+    LC_Flow_Fraction_Schedule,
+    Water;
+
+Pump:VariableSpeed,
+    LC_C01_Coolant_Loop_Pump,
+    LC C01 Coolant Loop Inlet Node,
+    LC C01 Coolant Pump Outlet Node,
+    0.160,
+    282668.75,
+    92300,
+    0.70,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    Intermittent,
+    LC_Flow_Fraction_Schedule;
+
+Pump:VariableSpeed,
+    LC_C01_Facility_Loop_Pump,
+    LC C01 Facility Loop Inlet Node,
+    LC C01 Facility Pump Outlet Node,
+    0.5184,
+    60399.306,
+    63900,
+    0.70,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    Intermittent,
+    LC_Flow_Fraction_Schedule;
+
+HeatExchanger:FluidToFluid,
+    LC_C01_CDU_HX,
+    Always_On,
+    LC C01 CDU Demand Inlet Node,
+    LC C01 CDU Demand Outlet Node,
+    0.5184,
+    LC C01 CDU Supply Inlet Node,
+    LC C01 CDU Supply Outlet Node,
+    0.160,
+    CounterFlow,
+    2500000,
+    CoolingSetpointModulated,
+    LC C01 CDU Supply Outlet Node,
+    0.0,
+    FreeCooling;
+
+Curve:Biquadratic,
+    LC_C01_Chiller_CapFT,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0,
+    60,
+    0,
+    60,
+    0.5,
+    1.5,
+    Temperature,
+    Temperature,
+    Dimensionless;
+
+Curve:Biquadratic,
+    LC_C01_Chiller_EIRFT,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0,
+    60,
+    0,
+    60,
+    0.5,
+    1.5,
+    Temperature,
+    Temperature,
+    Dimensionless;
+
+Curve:Quadratic,
+    LC_C01_Chiller_EIRFPLR,
+    0.0,
+    1.0,
+    0.0,
+    0,
+    1.2;
+Chiller:Electric:EIR,
+    LC_C01_Chiller,
+    10400000,
+    6.34,
+    40.0,
+    30.0,
+    0.5184,
+    0.5184,
+    LC_C01_Chiller_CapFT,
+    LC_C01_Chiller_EIRFT,
+    LC_C01_Chiller_EIRFPLR,
+    0.0,
+    1.0,
+    1.0,
+    0.25,
+    LC C01 WSE CHW Outlet Node,
+    LC C01 Chiller CHW Outlet Node,
+    LC C01 Chiller Condenser Inlet Node,
+    LC C01 Chiller Condenser Outlet Node,
+    WaterCooled,
+    ,
+    1.0,
+    5.0,
+    ConstantFlow,
+    0.0;
+
+SetpointManager:Scheduled,
+    LC_C01_Chiller_SPT,
+    Temperature,
+    LC_Facility_Supply_T_Schedule,
+    LC C01 Chiller CHW Outlet Node;
+HeatExchanger:FluidToFluid,
+    LC_C01_WSE_HX,
+    Always_On,
+    LC C01 WSE Condenser Inlet Node,
+    LC C01 WSE Condenser Outlet Node,
+    0.5184,
+    LC C01 WSE CHW Inlet Node,
+    LC C01 WSE CHW Outlet Node,
+    0.5184,
+    CounterFlow,
+    2600000,
+    CoolingDifferentialOnOff,
+    ,
+    2.0,
+    FreeCooling;
+CoolingTower:VariableSpeed,
+    LC_C01_CoolingTower,
+    LC C01 Condenser Tower Inlet Node,
+    LC C01 Condenser Tower Outlet Node,
+    YorkCalc,
+    ,
+    25.0,
+    3.9,
+    5.6,
+    0.5184,
+    700,
+    96000,
+    ,
+    0.2,
+    0.125,
+    0.0,
+    2.0,
+    ,
+    SaturatedExit,
+    0.2,
+    0.008,
+    ConcentrationRatio,
+    3.0,
+    ,
+    ,
+    ,
+    1,
+    MaximalCell,
+    0.33,
+    2.5,
+    1.0,
+    General;
+
+Pump:VariableSpeed,
+    LC_C01_Condenser_Water_Pump,
+    LC C01 Condenser Loop Inlet Node,
+    LC C01 Condenser Pump Outlet Node,
+    0.5184,
+    147453.704,
+    156000,
+    0.70,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    Intermittent,
+    LC_Flow_Fraction_Schedule;
+
+Sizing:Plant,
+    LC C01 Coolant Loop,
+    cooling,
+    45.0,
+    15.0;
+
+Sizing:Plant,
+    LC C01 Facility Loop,
+    cooling,
+    40.0,
+    5.0;
+
+SetpointManager:Scheduled,
+    LC_C01_CDU_HX_SPT,
+    Temperature,
+    LC_Coolant_Supply_T_Schedule,
+    LC C01 CDU Supply Outlet Node;
+
+SetpointManager:Scheduled,
+    LC_C01_Coolant_Loop_SPT,
+    Temperature,
+    LC_Coolant_Supply_T_Schedule,
+    LC C01 Coolant Supply Outlet Node;
+
+SetpointManager:Scheduled,
+    LC_C01_Facility_Loop_SPT,
+    Temperature,
+    LC_Facility_Supply_T_Schedule,
+    LC C01 Facility Supply Outlet Node;
+SetpointManager:Scheduled,
+    LC_C01_Condenser_Loop_SPT,
+    Temperature,
+    LC_Condenser_Supply_T_Schedule,
+    LC C01 Condenser Supply Outlet Node;
+
+PlantEquipmentOperationSchemes,
+    LC_C01_Coolant_Loop_Operation,
+    PlantEquipmentOperation:CoolingLoad,
+    LC_C01_Coolant_Cooling_Loads,
+    Always_On;
+
+PlantEquipmentOperation:CoolingLoad,
+    LC_C01_Coolant_Cooling_Loads,
+    0,
+    13000000,
+    LC_C01_Coolant_Equipment_List;
+
+PlantEquipmentList,
+    LC_C01_Coolant_Equipment_List,
+    HeatExchanger:FluidToFluid,
+    LC_C01_CDU_HX;
+
+PlantEquipmentOperationSchemes,
+    LC_C01_Facility_Loop_Operation,
+    PlantEquipmentOperation:CoolingLoad,
+    LC_C01_Facility_Cooling_Loads,
+    Always_On;
+
+PlantEquipmentOperation:CoolingLoad,
+    LC_C01_Facility_Cooling_Loads,
+    0,
+    13000000,
+    LC_C01_Facility_Equipment_List;
+
+PlantEquipmentList,
+    LC_C01_Facility_Equipment_List,
+    HeatExchanger:FluidToFluid,
+    LC_C01_WSE_HX,
+    Chiller:Electric:EIR,
+    LC_C01_Chiller;
+
+PlantLoop,
+    LC C01 Coolant Loop,
+    UserDefinedFluidType,
+    LC_PG30,
+    LC_C01_Coolant_Loop_Operation,
+    LC C01 Coolant Supply Outlet Node,
+    125,
+    3,
+    0.160,
+    0,
+    autocalculate,
+    LC C01 Coolant Loop Inlet Node,
+    LC C01 Coolant Supply Outlet Node,
+    LC C01 Coolant Supply Side Branches,
+    LC C01 Coolant Supply Side Connectors,
+    LC C01 Coolant Demand Inlet Node,
+    LC C01 Coolant Demand Outlet Node,
+    LC C01 Coolant Demand Side Branches,
+    LC C01 Coolant Demand Side Connectors,
+    Optimal;
+
+BranchList,
+    LC C01 Coolant Supply Side Branches,
+    LC C01 Coolant Supply Inlet Branch,
+    LC C01 Coolant Supply Main Branch,
+    LC C01 Coolant Supply Bypass Branch,
+    LC C01 Coolant Supply Outlet Branch;
+
+Branch,
+    LC C01 Coolant Supply Inlet Branch,
+    ,
+    Pump:VariableSpeed,
+    LC_C01_Coolant_Loop_Pump,
+    LC C01 Coolant Loop Inlet Node,
+    LC C01 Coolant Pump Outlet Node;
+
+Branch,
+    LC C01 Coolant Supply Main Branch,
+    ,
+    HeatExchanger:FluidToFluid,
+    LC_C01_CDU_HX,
+    LC C01 CDU Supply Inlet Node,
+    LC C01 CDU Supply Outlet Node;
+
+Branch,
+    LC C01 Coolant Supply Bypass Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Coolant_Supply_Bypass_Pipe,
+    LC C01 Coolant Supply Bypass Inlet Node,
+    LC C01 Coolant Supply Bypass Outlet Node;
+
+Branch,
+    LC C01 Coolant Supply Outlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Coolant_Supply_Outlet_Pipe,
+    LC C01 Coolant Supply Exit Pipe Inlet Node,
+    LC C01 Coolant Supply Outlet Node;
+
+ConnectorList,
+    LC C01 Coolant Supply Side Connectors,
+    Connector:Splitter,
+    LC C01 Coolant Supply Splitter,
+    Connector:Mixer,
+    LC C01 Coolant Supply Mixer;
+
+Connector:Splitter,
+    LC C01 Coolant Supply Splitter,
+    LC C01 Coolant Supply Inlet Branch,
+    LC C01 Coolant Supply Main Branch,
+    LC C01 Coolant Supply Bypass Branch;
+
+Connector:Mixer,
+    LC C01 Coolant Supply Mixer,
+    LC C01 Coolant Supply Outlet Branch,
+    LC C01 Coolant Supply Main Branch,
+    LC C01 Coolant Supply Bypass Branch;
+
+BranchList,
+    LC C01 Coolant Demand Side Branches,
+    LC C01 Coolant Demand Inlet Branch,
+    LC C01 Coolant IT Load Branch,
+    LC C01 Coolant Demand Bypass Branch,
+    LC C01 Coolant Demand Outlet Branch;
+
+Branch,
+    LC C01 Coolant Demand Inlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Coolant_Demand_Inlet_Pipe,
+    LC C01 Coolant Demand Inlet Node,
+    LC C01 Coolant Demand Entrance Pipe Outlet Node;
+
+Branch,
+    LC C01 Coolant IT Load Branch,
+    ,
+    LoadProfile:Plant,
+    LC_C01_IT_Load,
+    LC C01 IT Load Inlet Node,
+    LC C01 IT Load Outlet Node;
+
+Branch,
+    LC C01 Coolant Demand Bypass Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Coolant_Demand_Bypass_Pipe,
+    LC C01 Coolant Demand Bypass Inlet Node,
+    LC C01 Coolant Demand Bypass Outlet Node;
+
+Branch,
+    LC C01 Coolant Demand Outlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Coolant_Demand_Outlet_Pipe,
+    LC C01 Coolant Demand Exit Pipe Inlet Node,
+    LC C01 Coolant Demand Outlet Node;
+
+ConnectorList,
+    LC C01 Coolant Demand Side Connectors,
+    Connector:Splitter,
+    LC C01 Coolant Demand Splitter,
+    Connector:Mixer,
+    LC C01 Coolant Demand Mixer;
+
+Connector:Splitter,
+    LC C01 Coolant Demand Splitter,
+    LC C01 Coolant Demand Inlet Branch,
+    LC C01 Coolant IT Load Branch,
+    LC C01 Coolant Demand Bypass Branch;
+
+Connector:Mixer,
+    LC C01 Coolant Demand Mixer,
+    LC C01 Coolant Demand Outlet Branch,
+    LC C01 Coolant IT Load Branch,
+    LC C01 Coolant Demand Bypass Branch;
+
+PlantLoop,
+    LC C01 Facility Loop,
+    Water,
+    ,
+    LC_C01_Facility_Loop_Operation,
+    LC C01 Facility Supply Outlet Node,
+    125,
+    3,
+    0.5184,
+    0,
+    autocalculate,
+    LC C01 Facility Loop Inlet Node,
+    LC C01 Facility Supply Outlet Node,
+    LC C01 Facility Supply Side Branches,
+    LC C01 Facility Supply Side Connectors,
+    LC C01 Facility Demand Inlet Node,
+    LC C01 Facility Demand Outlet Node,
+    LC C01 Facility Demand Side Branches,
+    LC C01 Facility Demand Side Connectors,
+    SequentialLoad;
+
+BranchList,
+    LC C01 Facility Supply Side Branches,
+    LC C01 Facility Supply Inlet Branch,
+    LC C01 Facility Supply Cooler Branch,
+    LC C01 Facility Supply Bypass Branch,
+    LC C01 Facility Supply Outlet Branch;
+
+Branch,
+    LC C01 Facility Supply Inlet Branch,
+    ,
+    Pump:VariableSpeed,
+    LC_C01_Facility_Loop_Pump,
+    LC C01 Facility Loop Inlet Node,
+    LC C01 Facility Pump Outlet Node;
+
+Branch,
+    LC C01 Facility Supply Cooler Branch,
+    ,
+    HeatExchanger:FluidToFluid,
+    LC_C01_WSE_HX,
+    LC C01 WSE CHW Inlet Node,
+    LC C01 WSE CHW Outlet Node,
+    Chiller:Electric:EIR,
+    LC_C01_Chiller,
+    LC C01 WSE CHW Outlet Node,
+    LC C01 Chiller CHW Outlet Node;
+
+Branch,
+    LC C01 Facility Supply Bypass Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Facility_Supply_Bypass_Pipe,
+    LC C01 Facility Supply Bypass Inlet Node,
+    LC C01 Facility Supply Bypass Outlet Node;
+
+Branch,
+    LC C01 Facility Supply Outlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Facility_Supply_Outlet_Pipe,
+    LC C01 Facility Supply Exit Pipe Inlet Node,
+    LC C01 Facility Supply Outlet Node;
+
+ConnectorList,
+    LC C01 Facility Supply Side Connectors,
+    Connector:Splitter,
+    LC C01 Facility Supply Splitter,
+    Connector:Mixer,
+    LC C01 Facility Supply Mixer;
+
+Connector:Splitter,
+    LC C01 Facility Supply Splitter,
+    LC C01 Facility Supply Inlet Branch,
+    LC C01 Facility Supply Cooler Branch,
+    LC C01 Facility Supply Bypass Branch;
+
+Connector:Mixer,
+    LC C01 Facility Supply Mixer,
+    LC C01 Facility Supply Outlet Branch,
+    LC C01 Facility Supply Cooler Branch,
+    LC C01 Facility Supply Bypass Branch;
+
+BranchList,
+    LC C01 Facility Demand Side Branches,
+    LC C01 Facility Demand Inlet Branch,
+    LC C01 Facility HX Branch,
+    LC C01 Facility Demand Bypass Branch,
+    LC C01 Facility Demand Outlet Branch;
+
+Branch,
+    LC C01 Facility Demand Inlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Facility_Demand_Inlet_Pipe,
+    LC C01 Facility Demand Inlet Node,
+    LC C01 Facility Demand Entrance Pipe Outlet Node;
+
+Branch,
+    LC C01 Facility HX Branch,
+    ,
+    HeatExchanger:FluidToFluid,
+    LC_C01_CDU_HX,
+    LC C01 CDU Demand Inlet Node,
+    LC C01 CDU Demand Outlet Node;
+
+Branch,
+    LC C01 Facility Demand Bypass Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Facility_Demand_Bypass_Pipe,
+    LC C01 Facility Demand Bypass Inlet Node,
+    LC C01 Facility Demand Bypass Outlet Node;
+
+Branch,
+    LC C01 Facility Demand Outlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Facility_Demand_Outlet_Pipe,
+    LC C01 Facility Demand Exit Pipe Inlet Node,
+    LC C01 Facility Demand Outlet Node;
+
+ConnectorList,
+    LC C01 Facility Demand Side Connectors,
+    Connector:Splitter,
+    LC C01 Facility Demand Splitter,
+    Connector:Mixer,
+    LC C01 Facility Demand Mixer;
+
+Connector:Splitter,
+    LC C01 Facility Demand Splitter,
+    LC C01 Facility Demand Inlet Branch,
+    LC C01 Facility HX Branch,
+    LC C01 Facility Demand Bypass Branch;
+
+Connector:Mixer,
+    LC C01 Facility Demand Mixer,
+    LC C01 Facility Demand Outlet Branch,
+    LC C01 Facility HX Branch,
+    LC C01 Facility Demand Bypass Branch;
+
+Pipe:Adiabatic,
+    LC_C01_Coolant_Supply_Bypass_Pipe,
+    LC C01 Coolant Supply Bypass Inlet Node,
+    LC C01 Coolant Supply Bypass Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Coolant_Supply_Outlet_Pipe,
+    LC C01 Coolant Supply Exit Pipe Inlet Node,
+    LC C01 Coolant Supply Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Coolant_Demand_Inlet_Pipe,
+    LC C01 Coolant Demand Inlet Node,
+    LC C01 Coolant Demand Entrance Pipe Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Coolant_Demand_Bypass_Pipe,
+    LC C01 Coolant Demand Bypass Inlet Node,
+    LC C01 Coolant Demand Bypass Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Coolant_Demand_Outlet_Pipe,
+    LC C01 Coolant Demand Exit Pipe Inlet Node,
+    LC C01 Coolant Demand Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Facility_Supply_Bypass_Pipe,
+    LC C01 Facility Supply Bypass Inlet Node,
+    LC C01 Facility Supply Bypass Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Facility_Supply_Outlet_Pipe,
+    LC C01 Facility Supply Exit Pipe Inlet Node,
+    LC C01 Facility Supply Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Facility_Demand_Inlet_Pipe,
+    LC C01 Facility Demand Inlet Node,
+    LC C01 Facility Demand Entrance Pipe Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Facility_Demand_Bypass_Pipe,
+    LC C01 Facility Demand Bypass Inlet Node,
+    LC C01 Facility Demand Bypass Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Facility_Demand_Outlet_Pipe,
+    LC C01 Facility Demand Exit Pipe Inlet Node,
+    LC C01 Facility Demand Outlet Node;
+
+Sizing:Plant,
+    LC C01 Condenser Loop,
+    Condenser,
+    30.0,
+    5.0;
+
+CondenserEquipmentOperationSchemes,
+    LC_C01_Condenser_Loop_Operation,
+    PlantEquipmentOperation:CoolingLoad,
+    LC_C01_Condenser_Cooling_Loads,
+    Always_On;
+
+PlantEquipmentOperation:CoolingLoad,
+    LC_C01_Condenser_Cooling_Loads,
+    0,
+    13000000,
+    LC_C01_Condenser_Equipment_List;
+
+CondenserEquipmentList,
+    LC_C01_Condenser_Equipment_List,
+    CoolingTower:VariableSpeed,
+    LC_C01_CoolingTower;
+
+CondenserLoop,
+    LC C01 Condenser Loop,
+    Water,
+    ,
+    LC_C01_Condenser_Loop_Operation,
+    LC C01 Condenser Supply Outlet Node,
+    125,
+    3,
+    0.5184,
+    0,
+    autocalculate,
+    LC C01 Condenser Loop Inlet Node,
+    LC C01 Condenser Supply Outlet Node,
+    LC C01 Condenser Supply Side Branches,
+    LC C01 Condenser Supply Side Connectors,
+    LC C01 Condenser Demand Inlet Node,
+    LC C01 Condenser Demand Outlet Node,
+    LC C01 Condenser Demand Side Branches,
+    LC C01 Condenser Demand Side Connectors,
+    SequentialLoad;
+
+BranchList,
+    LC C01 Condenser Supply Side Branches,
+    LC C01 Condenser Supply Inlet Branch,
+    LC C01 Condenser Tower Branch,
+    LC C01 Condenser Supply Bypass Branch,
+    LC C01 Condenser Supply Outlet Branch;
+
+Branch,
+    LC C01 Condenser Supply Inlet Branch,
+    ,
+    Pump:VariableSpeed,
+    LC_C01_Condenser_Water_Pump,
+    LC C01 Condenser Loop Inlet Node,
+    LC C01 Condenser Pump Outlet Node;
+
+Branch,
+    LC C01 Condenser Tower Branch,
+    ,
+    CoolingTower:VariableSpeed,
+    LC_C01_CoolingTower,
+    LC C01 Condenser Tower Inlet Node,
+    LC C01 Condenser Tower Outlet Node;
+
+Branch,
+    LC C01 Condenser Supply Bypass Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Condenser_Supply_Bypass_Pipe,
+    LC C01 Condenser Supply Bypass Inlet Node,
+    LC C01 Condenser Supply Bypass Outlet Node;
+
+Branch,
+    LC C01 Condenser Supply Outlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Condenser_Supply_Outlet_Pipe,
+    LC C01 Condenser Supply Exit Pipe Inlet Node,
+    LC C01 Condenser Supply Outlet Node;
+
+ConnectorList,
+    LC C01 Condenser Supply Side Connectors,
+    Connector:Splitter,
+    LC C01 Condenser Supply Splitter,
+    Connector:Mixer,
+    LC C01 Condenser Supply Mixer;
+
+Connector:Splitter,
+    LC C01 Condenser Supply Splitter,
+    LC C01 Condenser Supply Inlet Branch,
+    LC C01 Condenser Tower Branch,
+    LC C01 Condenser Supply Bypass Branch;
+
+Connector:Mixer,
+    LC C01 Condenser Supply Mixer,
+    LC C01 Condenser Supply Outlet Branch,
+    LC C01 Condenser Tower Branch,
+    LC C01 Condenser Supply Bypass Branch;
+
+BranchList,
+    LC C01 Condenser Demand Side Branches,
+    LC C01 Condenser Demand Inlet Branch,
+    LC C01 Chiller Condenser Branch,
+    LC C01 WSE Condenser Branch,
+    LC C01 Condenser Demand Bypass Branch,
+    LC C01 Condenser Demand Outlet Branch;
+
+Branch,
+    LC C01 Condenser Demand Inlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Condenser_Demand_Inlet_Pipe,
+    LC C01 Condenser Demand Inlet Node,
+    LC C01 Condenser Demand Entrance Pipe Outlet Node;
+
+Branch,
+    LC C01 Chiller Condenser Branch,
+    ,
+    Chiller:Electric:EIR,
+    LC_C01_Chiller,
+    LC C01 Chiller Condenser Inlet Node,
+    LC C01 Chiller Condenser Outlet Node;
+Branch,
+    LC C01 WSE Condenser Branch,
+    ,
+    HeatExchanger:FluidToFluid,
+    LC_C01_WSE_HX,
+    LC C01 WSE Condenser Inlet Node,
+    LC C01 WSE Condenser Outlet Node;
+
+Branch,
+    LC C01 Condenser Demand Bypass Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Condenser_Demand_Bypass_Pipe,
+    LC C01 Condenser Demand Bypass Inlet Node,
+    LC C01 Condenser Demand Bypass Outlet Node;
+
+Branch,
+    LC C01 Condenser Demand Outlet Branch,
+    ,
+    Pipe:Adiabatic,
+    LC_C01_Condenser_Demand_Outlet_Pipe,
+    LC C01 Condenser Demand Exit Pipe Inlet Node,
+    LC C01 Condenser Demand Outlet Node;
+
+ConnectorList,
+    LC C01 Condenser Demand Side Connectors,
+    Connector:Splitter,
+    LC C01 Condenser Demand Splitter,
+    Connector:Mixer,
+    LC C01 Condenser Demand Mixer;
+
+Connector:Splitter,
+    LC C01 Condenser Demand Splitter,
+    LC C01 Condenser Demand Inlet Branch,
+    LC C01 Chiller Condenser Branch,
+    LC C01 WSE Condenser Branch,
+    LC C01 Condenser Demand Bypass Branch;
+
+Connector:Mixer,
+    LC C01 Condenser Demand Mixer,
+    LC C01 Condenser Demand Outlet Branch,
+    LC C01 Chiller Condenser Branch,
+    LC C01 WSE Condenser Branch,
+    LC C01 Condenser Demand Bypass Branch;
+
+Pipe:Adiabatic,
+    LC_C01_Condenser_Supply_Bypass_Pipe,
+    LC C01 Condenser Supply Bypass Inlet Node,
+    LC C01 Condenser Supply Bypass Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Condenser_Supply_Outlet_Pipe,
+    LC C01 Condenser Supply Exit Pipe Inlet Node,
+    LC C01 Condenser Supply Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Condenser_Demand_Inlet_Pipe,
+    LC C01 Condenser Demand Inlet Node,
+    LC C01 Condenser Demand Entrance Pipe Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Condenser_Demand_Bypass_Pipe,
+    LC C01 Condenser Demand Bypass Inlet Node,
+    LC C01 Condenser Demand Bypass Outlet Node;
+
+Pipe:Adiabatic,
+    LC_C01_Condenser_Demand_Outlet_Pipe,
+    LC C01 Condenser Demand Exit Pipe Inlet Node,
+    LC C01 Condenser Demand Outlet Node;
+Output:VariableDictionary,
+    Regular;
+
+Output:Table:SummaryReports,
+    AllSummary;
+
+Output:Variable,
+    *,
+    System Node Temperature,
+    timestep;
+
+Output:Variable,
+    *,
+    System Node Mass Flow Rate,
+    timestep;
+
+Output:Variable,
+    *,
+    Pump Electricity Rate,
+    timestep;
+
+Output:Variable,
+    *,
+    Plant Supply Side Inlet Temperature,
+    timestep;
+
+Output:Variable,
+    *,
+    Plant Supply Side Outlet Temperature,
+    timestep;
+
+Output:Variable,
+    *,
+    Plant Supply Side Cooling Demand Rate,
+    timestep;
+
+Output:Variable,
+    *,
+    Plant Load Profile Heat Transfer Rate,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Inlet Temperature,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Outlet Temperature,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Mass Flow Rate,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Heat Transfer Rate,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Fan Electricity Rate,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Make Up Water Volume,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Make Up Mains Water Volume,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Water Evaporation Volume,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Water Drift Volume,
+    timestep;
+
+Output:Variable,
+    *,
+    Cooling Tower Water Blowdown Volume,
+    timestep;
