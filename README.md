@@ -88,6 +88,12 @@ Performance Analysis of Liquid-Cooled Data Centers Under Diverse Outdoor Conditi
 
 [5] OpenModelica, "Buildings.Fluid.Chillers.Data.ElectricEIR," *OpenModelica Documentation*. [Online]. Available: https://build.openmodelica.org/Documentation/Buildings.Fluid.Chillers.Data.ElectricEIR.html. [Accessed: Apr. 7, 2026].
 
+**Real-world Dataset for LCDC Model Validation**
+
+M100 dataset 1 is a real-world open dataset collected from Marconi100, a Tier-0 supercomputer at CINECA, and can serve as a valuable reference dataset for validating LCDC (Liquid Cooling Data Center) models. It includes not only node-level measurements from more than 980 computing nodes, such as core load, temperature, frequency, memory activity, CPU power, fan speed, and GPU utilization, but also system-level information covering the liquid cooling infrastructure, air-conditioning system, power supply units, workload manager statistics, job-related information, system alerts, and weather data. Covering the period from March to December 2020, the dataset is stored as a partitioned Parquet dataset organized by year_month, plugin, and metric, and distributed as monthly tarballs, making it well suited for analyzing the thermal and operational behavior of large-scale liquid-cooled data centers and for model validation purposes.
+
+[6] Andrea Borghesi, Carmine Di Santi, Martin Molan, Mohsen Seyedkazemi Ardebili, Alessio Mauri, Massimiliano Guarrasi, Daniela Galetti, Mirko Cestari, Francesco Barchi, Luca Benini, Francesco Beneventi, and Andrea Bartolini. (2023). *M100 dataset 1: from 20-03 to 20-12 (1.0.0)* [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7588815
+
 #### Baseline Weather
 
 | Role | Climate Zone / Representative City | Weather Data |
