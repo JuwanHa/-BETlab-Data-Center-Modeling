@@ -38,12 +38,6 @@ We developed a high-fidelity, physics-based EnergyPlus model of an air-cooled da
 
 [5] Kwanghee Kim, Yujin Kim, Juwan Ha, Young-hak Song., AI-based Model Predictive Control of Chiller Plant with Thermal Energy Storage combined a Water-side Economizer System in Data Centers, *Energy and Buildings* (Under review)
 
-## Baseline Weather
-
-| Role | Climate Zone / Representative City | Weather Data |
-|---|---|---|
-| Baseline | 4A Raleigh, NC | `WeatherData/Baseline_Raleigh/USA_NC_Raleigh-Durham.Intl.AP.723060_TMYx.2009-2023.epw` |
-
 ### 2) Liquid-Cooled Data Center (LCDC)
 
 #### Overview
@@ -77,3 +71,9 @@ At Data Hall level, each system is designed with N+1 redundancy to ensure stable
 ![Figure 4. System Overview of the Liquid Cooling Data Center](docs/images/control-architecture.png)
 
 *Figure 4. System Overview of the Liquid Cooling Data Center*
+
+#### Baseline Weather
+
+| Role | Climate Zone / Representative City | Weather Data |
+|---|---|---|
+| Baseline | 4A Raleigh, NC | `WeatherData/Baseline_Raleigh/USA_NC_Raleigh-Durham.Intl.AP.723060_TMYx.2009-2023.epw` |
