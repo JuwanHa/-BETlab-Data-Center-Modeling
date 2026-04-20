@@ -14,11 +14,11 @@ We developed a high-fidelity, physics-based EnergyPlus model of an air-cooled da
 
 ![Figure 1. WSE Control Sequence Diagram](docs/images/figure-1-wse-control-sequence.jpg)
 
-*Figure 1. WSE Control Sequence Diagram (Reference [1])*
+<p align="center"><em>Figure 1. WSE Control Sequence Diagram (Reference [1])</em></p>
 
 ![Figure 2. Air-cooled Data Center System Schematic Diagram](docs/images/figure-2-air-cooled-system.jpg)
 
-*Figure 2. Air-cooled Data Center System Schematic Diagram (Reference [4])*
+<p align="center"><em>Figure 2. Air-cooled Data Center System Schematic Diagram (Reference [4])</em></p>
 
 #### Reference
 
@@ -60,7 +60,7 @@ These aggregated IT workloads are then translated into minute-resolution cooling
 
 ![Figure 3. IT and Cooling Load Modeling](docs/images/repo-overview.png)
 
-*Figure 3. IT and Cooling Load Modeling*
+<p align="center"><em>Figure 3. IT and Cooling Load Modeling</em></p>
 
 #### 2-2) Liquid Cooling Data Center System
 
@@ -70,7 +70,7 @@ At Data Hall level, each system is designed with N+1 redundancy to ensure stable
 
 ![Figure 4. System Overview of the Liquid Cooling Data Center](docs/images/control-architecture.png)
 
-*Figure 4. System Overview of the Liquid Cooling Data Center*
+<p align="center"><em>Figure 4. System Overview of the Liquid Cooling Data Center</em></p>
 
 #### Baseline Weather
 
