@@ -76,6 +76,18 @@ At Data Hall level, each system is designed with N+1 redundancy to ensure stable
 
 Performance Analysis of Liquid-Cooled Data Centers Under Diverse Outdoor Conditions and High-Density Rack Configurations, *Energy and Buildings* (In-preparation)
 
+**IT and Cooling Load Modeling**
+
+[1] NVIDIA Corporation, *NVIDIA DGX GB Rack Scale Systems User Guide*, Mar. 3, 2026.
+
+[2] Vertiv Group Corp., *Vertiv(TM) Liebert(R) XDU 1350 - Coolant Distribution Unit (CDU)*, doc. no. MKA4L0UKXDUDS1350, rev. 1- (R01/23), 2023.
+
+[3] Vertiv Group Corp., *Vertiv(TM) Liebert(R) DCD: Energy Efficient Cooling for High Density Applications*, doc. no. MKA4L0UKDCD, rev. R04/22, 2022.
+
+[4] Trane, *High-Efficiency Cooling for the 1 GW AI Factory: Reference Design #502, High Condenser Temperature System Design featuring CenTraVac(R) Simplex*
+
+[5] OpenModelica, "Buildings.Fluid.Chillers.Data.ElectricEIR," *OpenModelica Documentation*. [Online]. Available: https://build.openmodelica.org/Documentation/Buildings.Fluid.Chillers.Data.ElectricEIR.html. [Accessed: Apr. 7, 2026].
+
 #### Baseline Weather
 
 | Role | Climate Zone / Representative City | Weather Data |
